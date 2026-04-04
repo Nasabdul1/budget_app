@@ -73,10 +73,22 @@ button[data-testid="stSidebarCollapsedControl"],
     background: var(--surface2) !important;
     border: 1px solid var(--border) !important;
     border-radius: 8px !important;
-    padding: 0.4rem !important;
+    padding: 0.5rem 0.65rem !important;
+    min-width: 2.8rem !important;
+    justify-content: center !important;
     color: var(--text) !important;
     cursor: pointer;
     transition: background 0.2s ease;
+}
+button[data-testid="stSidebarCollapsedControl"] svg,
+[data-testid="collapsedControl"] svg {
+    display: none !important;
+}
+button[data-testid="stSidebarCollapsedControl"]::before,
+[data-testid="collapsedControl"]::before {
+    content: '☰';
+    font-size: 1.1rem;
+    color: var(--text);
 }
 button[data-testid="stSidebarCollapsedControl"]:hover,
 [data-testid="collapsedControl"]:hover {
@@ -266,6 +278,51 @@ label, .stRadio label span {
         left: 0.7rem;
     }
 
+    /* Hide the sidebar and show bottom navigation on mobile */
+    section[data-testid="stSidebar"] {
+        display: none !important;
+    }
+    button[data-testid="stSidebarCollapsedControl"],
+    [data-testid="collapsedControl"] {
+        display: none !important;
+    }
+    .mobile-bottom-nav {
+        display: flex !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 0.55rem 0.25rem;
+        background: var(--surface) !important;
+        border-top: 1px solid var(--border) !important;
+        z-index: 1002;
+        justify-content: space-around;
+        gap: 0.15rem;
+    }
+    .mobile-bottom-nav .nav-item {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        color: var(--muted) !important;
+        text-decoration: none !important;
+        font-size: 0.72rem !important;
+        gap: 0.25rem !important;
+        padding: 0.45rem 0.35rem !important;
+        border-radius: 12px !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+    }
+    .mobile-bottom-nav .nav-item .ti {
+        font-size: 1.25rem !important;
+    }
+    .mobile-bottom-nav .nav-item.active {
+        color: var(--text) !important;
+    }
+    .mobile-bottom-nav .nav-item.active .ti {
+        color: var(--accent) !important;
+    }
+
     /* Smaller metric cards */
     [data-testid="metric-container"] {
         padding: 0.7rem 0.8rem;
@@ -277,6 +334,11 @@ label, .stRadio label span {
     /* Compact page header */
     h1 {
         font-size: 1.5rem !important;
+    }
+
+    /* Keep content visible above fixed nav */
+    .main [data-testid="stVerticalBlock"] {
+        margin-bottom: 5.6rem !important;
     }
 
     /* Plotly charts fit viewport */
@@ -365,6 +427,19 @@ def cat_icon(category, size="1rem", color="#7c6af7"):
 if "base_currency" not in st.session_state:
     st.session_state.base_currency = get_setting("base_currency", "USD")
 
+# ── Navigation state ───────────────────────────────────────────────────────────
+page_options = [
+    "Dashboard",
+    "Add Expense",
+    "Transactions",
+    "Budgets",
+    "Currency",
+    "Settings"
+]
+
+if "page" not in st.session_state:
+    st.session_state.page = "Dashboard"
+
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("""
@@ -378,14 +453,7 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    page = st.radio("Navigation", [
-        "Dashboard",
-        "Add Expense",
-        "Transactions",
-        "Budgets",
-        "Currency",
-        "Settings"
-    ], label_visibility="visible")
+    page = st.radio("Navigation", page_options, index=page_options.index(st.session_state.page), key="sidebar_page", label_visibility="visible")
 
     st.markdown("---")
 
@@ -403,6 +471,23 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown(f"<div style='font-size:0.68rem;color:#3a3a50;text-align:center;font-family:DM Mono,monospace;'>{datetime.now().strftime('%A, %d %b %Y')}</div>", unsafe_allow_html=True)
+
+st.session_state.page = st.session_state.sidebar_page
+page = st.session_state.page
+
+nav_items = [
+    ("Dashboard", "ti-layout-dashboard"),
+    ("Add Expense", "ti-plus"),
+    ("Transactions", "ti-list-details"),
+    ("Budgets", "ti-wallet"),
+    ("Currency", "ti-currency-dollar"),
+    ("Settings", "ti-settings")
+]
+nav_links = []
+for label, icon in nav_items:
+    active = "active" if page == label else ""
+    nav_links.append(f"<a onclick=\"alert('Click {label}')\" class='nav-item {active}' style='cursor:pointer;'><i class='ti {icon}'></i><span>{label}</span></a>")
+st.markdown(f"<div class='mobile-bottom-nav'>{''.join(nav_links)}</div>", unsafe_allow_html=True)
 
 
 # ── Helper: alerts banner ─────────────────────────────────────────────────────
