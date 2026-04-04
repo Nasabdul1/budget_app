@@ -75,10 +75,14 @@ button[data-testid="stSidebarCollapsedControl"],
     border-radius: 8px !important;
     padding: 0.5rem 0.65rem !important;
     min-width: 2.8rem !important;
+    height: 2.8rem !important;
     justify-content: center !important;
+    align-items: center !important;
     color: var(--text) !important;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: all 0.2s ease;
+    font-size: 1.1rem !important;
+    font-weight: 600;
 }
 button[data-testid="stSidebarCollapsedControl"] svg,
 [data-testid="collapsedControl"] svg {
@@ -87,12 +91,15 @@ button[data-testid="stSidebarCollapsedControl"] svg,
 button[data-testid="stSidebarCollapsedControl"]::before,
 [data-testid="collapsedControl"]::before {
     content: '☰';
-    font-size: 1.1rem;
-    color: var(--text);
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: block;
+    line-height: 1;
 }
 button[data-testid="stSidebarCollapsedControl"]:hover,
 [data-testid="collapsedControl"]:hover {
     background: var(--accent) !important;
+    transform: scale(1.05);
 }
 
 /* Sidebar close button */
@@ -238,8 +245,31 @@ label, .stRadio label span {
     letter-spacing: 0.05em;
 }
 
-/* Icon alignment */
-.ti { vertical-align: middle; }
+/* Icon alignment & styling */
+.ti {
+    vertical-align: -0.125em;
+    display: inline-block;
+    font-size: inherit;
+    line-height: 1;
+    font-style: normal;
+    font-weight: 400;
+    font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Icon in buttons and navigation */
+button .ti,
+a .ti,
+span .ti {
+    vertical-align: middle;
+    margin: 0;
+    padding: 0;
+}
 
 /* ── Mobile Responsive ───────────────────────────────────── */
 @media (max-width: 768px) {
@@ -253,32 +283,7 @@ label, .stRadio label span {
         min-width: 100% !important;
     }
 
-    /* Make sidebar collapsible hamburger */
-    section[data-testid="stSidebar"] {
-        min-width: 0 !important;
-        width: 85vw !important;
-        max-width: 320px !important;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-        z-index: 999;
-        position: fixed !important;
-        top: 0;
-        left: 0;
-        height: 100vh;
-    }
-    section[data-testid="stSidebar"][aria-expanded="true"] {
-        transform: translateX(0);
-        box-shadow: 4px 0 30px rgba(0,0,0,0.6);
-    }
-
-    /* Ensure hamburger toggle stays above sidebar on mobile */
-    button[data-testid="stSidebarCollapsedControl"],
-    [data-testid="collapsedControl"] {
-        top: 0.7rem;
-        left: 0.7rem;
-    }
-
-    /* Hide the sidebar and show bottom navigation on mobile */
+    /* Mobile sidebar remains hidden */
     section[data-testid="stSidebar"] {
         display: none !important;
     }
@@ -286,43 +291,12 @@ label, .stRadio label span {
     [data-testid="collapsedControl"] {
         display: none !important;
     }
-    .mobile-bottom-nav {
-        display: flex !important;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        padding: 0.55rem 0.25rem;
-        background: var(--surface) !important;
-        border-top: 1px solid var(--border) !important;
-        z-index: 1002;
-        justify-content: space-around;
-        gap: 0.15rem;
-    }
-    .mobile-bottom-nav .nav-item {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        color: var(--muted) !important;
-        text-decoration: none !important;
-        font-size: 0.72rem !important;
-        gap: 0.25rem !important;
-        padding: 0.45rem 0.35rem !important;
-        border-radius: 12px !important;
-        min-width: 0 !important;
-        flex: 1 1 auto !important;
-    }
-    .mobile-bottom-nav .nav-item .ti {
-        font-size: 1.25rem !important;
-    }
-    .mobile-bottom-nav .nav-item.active {
-        color: var(--text) !important;
-    }
-    .mobile-bottom-nav .nav-item.active .ti {
-        color: var(--accent) !important;
-    }
 
+    /* Add bottom padding to avoid content being hidden under fixed nav */
+    .stMainBlockContainer, .block-container {
+        padding-bottom: 6rem !important;
+    }
+    
     /* Smaller metric cards */
     [data-testid="metric-container"] {
         padding: 0.7rem 0.8rem;
@@ -420,7 +394,7 @@ def fmt_currency(val, cur="USD"):
 
 def cat_icon(category, size="1rem", color="#7c6af7"):
     ic = CATEGORY_ICONS.get(category, "ti-tool")
-    return f'<i class="ti {ic}" style="font-size:{size};color:{color};"></i>'
+    return f'<span style="display:inline-flex;align-items:center;justify-content:center;height:{size};width:{size};"><i class="ti {ic}" style="font-size:{size};color:{color};line-height:1;"></i></span>'
 
 
 # ── Load base currency ────────────────────────────────────────────────────────
@@ -475,6 +449,7 @@ with st.sidebar:
 st.session_state.page = st.session_state.sidebar_page
 page = st.session_state.page
 
+# ── Mobile bottom navigation (desktop hidden) ──────────────────────────────────
 nav_items = [
     ("Dashboard", "ti-layout-dashboard"),
     ("Add Expense", "ti-plus"),
@@ -483,11 +458,75 @@ nav_items = [
     ("Currency", "ti-currency-dollar"),
     ("Settings", "ti-settings")
 ]
-nav_links = []
-for label, icon in nav_items:
-    active = "active" if page == label else ""
-    nav_links.append(f"<a onclick=\"alert('Click {label}')\" class='nav-item {active}' style='cursor:pointer;'><i class='ti {icon}'></i><span>{label}</span></a>")
-st.markdown(f"<div class='mobile-bottom-nav'>{''.join(nav_links)}</div>", unsafe_allow_html=True)
+
+nav_html = """
+<style>
+.mobile-nav-container {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    z-index: 1002;
+    padding: 0;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .mobile-nav-container {
+        display: flex;
+    }
+    
+    .nav-button {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 0.25rem;
+        gap: 0.3rem;
+        color: var(--muted);
+        font-size: 0.65rem;
+        font-family: 'Syne', sans-serif;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+        background: transparent;
+    }
+    
+    .nav-button:hover,
+    .nav-button.active {
+        color: var(--text);
+    }
+    
+    .nav-button.active i {
+        color: var(--accent);
+        font-size: 1.35rem;
+    }
+    
+    .nav-button i {
+        font-size: 1.2rem;
+        transition: all 0.2s ease;
+    }
+}
+</style>
+"""
+st.markdown(nav_html, unsafe_allow_html=True)
+
+# ── Mobile Navigation Buttons ────────────────────────────────────────────────────
+# Create columns for mobile navigation (will be styled by CSS above)
+st.markdown("""
+<div style='position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface); border-top: 1px solid var(--border); padding: 0.65rem 0.35rem; z-index: 1002; display: none;' class='mobile-nav-container' id='mobile-nav'>
+</div>
+""", unsafe_allow_html=True)
+
+# Store navigation items for reference
+if "nav_items" not in st.session_state:
+    st.session_state.nav_items = nav_items
 
 
 # ── Helper: alerts banner ─────────────────────────────────────────────────────
