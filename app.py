@@ -35,17 +35,17 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap');
 
 :root {
-    --bg: #ffffff;
-    --surface: #f8f9fa;
-    --surface2: #e9ecef;
-    --border: #dee2e6;
-    --accent: #007bff;
-    --accent2: #28a745;
-    --accent3: #ffc107;
-    --text: #212529;
-    --muted: #6c757d;
-    --danger: #dc3545;
-    --success: #28a745;
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #16161f;
+    --border: #1e1e2e;
+    --accent: #7c6af7;
+    --accent2: #f97316;
+    --accent3: #22d3a5;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --danger: #f43f5e;
+    --success: #22d3a5;
 }
 
 html, body, [class*="css"] {
@@ -139,9 +139,9 @@ section[data-testid="stSidebar"] .stRadio > label {
     transition: all 0.2s ease !important;
 }
 .stButton > button:hover {
-    background: #0056b3 !important;
+    background: #6a5ae0 !important;
     transform: translateY(-1px);
-    box-shadow: 0 4px 20px rgba(0,123,255,0.35) !important;
+    box-shadow: 0 4px 20px rgba(124,106,247,0.35) !important;
 }
 
 /* Inputs */
@@ -345,9 +345,9 @@ CURRENCIES = ["USD", "EUR", "GBP", "NGN", "CAD", "AUD", "JPY", "INR", "GHS", "KE
 CHART_TEMPLATE = dict(
     paper_bgcolor="rgba(0,0,0,0)",
     plot_bgcolor="rgba(0,0,0,0)",
-    font=dict(family="Syne", color="#6c757d", size=11),
+    font=dict(family="Syne", color="#6b6b80", size=11),
     margin=dict(t=30, b=20, l=10, r=10),
-    colorway=["#007bff","#28a745","#ffc107","#dc3545","#17a2b8","#6f42c1","#e83e8c","#fd7e14","#20c997","#6c757d"]
+    colorway=["#7c6af7","#f97316","#22d3a5","#f43f5e","#38bdf8","#facc15","#c084fc","#fb7185","#4ade80","#60a5fa"]
 )
 
 def fmt_currency(val, cur="USD"):
@@ -356,7 +356,7 @@ def fmt_currency(val, cur="USD"):
     return f"{sym}{val:,.2f}"
 
 
-def cat_icon(category, size="1rem", color="#007bff"):
+def cat_icon(category, size="1rem", color="#7c6af7"):
     ic = CATEGORY_ICONS.get(category, "ti-tool")
     return f'<i class="ti {ic}" style="font-size:{size};color:{color};"></i>'
 
@@ -369,22 +369,22 @@ if "base_currency" not in st.session_state:
 with st.sidebar:
     st.markdown("""
     <div style="padding: 1rem 0 1.5rem;">
-        <div style="font-size:1.6rem; font-weight:800; letter-spacing:-0.02em; color:#212529;">
-            NEXUS<span style="color:#007bff;">.</span>
+        <div style="font-size:1.6rem; font-weight:800; letter-spacing:-0.02em; color:#e8e8f0;">
+            NEXUS<span style="color:#7c6af7;">.</span>
         </div>
-        <div style="font-size:0.7rem; color:#6c757d; letter-spacing:0.15em; text-transform:uppercase; margin-top:2px; font-family:'DM Mono',monospace;">
+        <div style="font-size:0.7rem; color:#6b6b80; letter-spacing:0.15em; text-transform:uppercase; margin-top:2px; font-family:'DM Mono',monospace;">
             Smart Budget Tracker
         </div>
     </div>
     """, unsafe_allow_html=True)
 
     page = st.radio("Navigation", [
-        "🏠 Dashboard",
-        "➕ Add Expense",
-        "📊 Transactions",
-        "💰 Budgets",
-        "💱 Currency",
-        "⚙️ Settings"
+        "Dashboard",
+        "Add Expense",
+        "Transactions",
+        "Budgets",
+        "Currency",
+        "Settings"
     ], label_visibility="visible")
 
     st.markdown("---")
@@ -402,7 +402,7 @@ with st.sidebar:
         end_date = st.date_input("To", value=date.today(), label_visibility="collapsed")
 
     st.markdown("---")
-    st.markdown(f"<div style='font-size:0.68rem;color:#6c757d;text-align:center;font-family:DM Mono,monospace;'>{datetime.now().strftime('%A, %d %b %Y')}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='font-size:0.68rem;color:#3a3a50;text-align:center;font-family:DM Mono,monospace;'>{datetime.now().strftime('%A, %d %b %Y')}</div>", unsafe_allow_html=True)
 
 
 # ── Helper: alerts banner ─────────────────────────────────────────────────────
@@ -423,8 +423,8 @@ def show_alerts():
 # PAGE: DASHBOARD
 # ══════════════════════════════════════════════════════════════════════════════
 if page == "Dashboard":
-    st.markdown("<h1 style='font-size:2rem;font-weight:800;letter-spacing:-0.03em;margin-bottom:0.2rem;'><i class='ti ti-chart-line' style='margin-right:0.5rem;'></i>Financial Overview</h1>", unsafe_allow_html=True)
-    st.markdown(f"<p style='color:#6c757d;font-size:0.85rem;font-family:DM Mono,monospace;margin-bottom:1.5rem;'>{start_date.strftime('%b %d')} → {end_date.strftime('%b %d, %Y')}</p>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size:2rem;font-weight:800;letter-spacing:-0.03em;margin-bottom:0.2rem;'>Financial Overview</h1>", unsafe_allow_html=True)
+    st.markdown(f"<p style='color:#6b6b80;font-size:0.85rem;font-family:DM Mono,monospace;margin-bottom:1.5rem;'>{start_date.strftime('%b %d')} → {end_date.strftime('%b %d, %Y')}</p>", unsafe_allow_html=True)
 
     show_alerts()
 
@@ -553,8 +553,8 @@ if page == "Dashboard":
 # PAGE: ADD EXPENSE
 # ══════════════════════════════════════════════════════════════════════════════
 elif page == "Add Expense":
-    st.markdown("<h1 style='font-size:2rem;font-weight:800;letter-spacing:-0.03em;'><i class='ti ti-plus' style='margin-right:0.5rem;'></i>Add Expense</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#6c757d;font-size:0.85rem;font-family:DM Mono,monospace;margin-bottom:1.5rem;'>Record a new transaction</p>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size:2rem;font-weight:800;letter-spacing:-0.03em;'>Add Expense</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#6b6b80;font-size:0.85rem;font-family:DM Mono,monospace;margin-bottom:1.5rem;'>Record a new transaction</p>", unsafe_allow_html=True)
 
     col1, col2 = st.columns([1.5, 1])
     with col1:
@@ -611,8 +611,8 @@ elif page == "Add Expense":
 # PAGE: TRANSACTIONS
 # ══════════════════════════════════════════════════════════════════════════════
 elif page == "Transactions":
-    st.markdown("<h1 style='font-size:2rem;font-weight:800;letter-spacing:-0.03em;'><i class='ti ti-list' style='margin-right:0.5rem;'></i>Transactions</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#6c757d;font-size:0.85rem;font-family:DM Mono,monospace;margin-bottom:1.5rem;'>All recorded expenses</p>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size:2rem;font-weight:800;letter-spacing:-0.03em;'>Transactions</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#6b6b80;font-size:0.85rem;font-family:DM Mono,monospace;margin-bottom:1.5rem;'>All recorded expenses</p>", unsafe_allow_html=True)
 
     f1, f2, f3 = st.columns([1.5, 1, 1])
     with f1:
@@ -701,14 +701,14 @@ elif page == "Transactions":
 # PAGE: BUDGETS
 # ══════════════════════════════════════════════════════════════════════════════
 elif page == "Budgets":
-    st.markdown("<h1 style='font-size:2rem;font-weight:800;letter-spacing:-0.03em;'><i class='ti ti-wallet' style='margin-right:0.5rem;'></i>Budget Planner</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#6c757d;font-size:0.85rem;font-family:DM Mono,monospace;margin-bottom:1.5rem;'>Set spending limits per category</p>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size:2rem;font-weight:800;letter-spacing:-0.03em;'>Budget Planner</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#6b6b80;font-size:0.85rem;font-family:DM Mono,monospace;margin-bottom:1.5rem;'>Set spending limits per category</p>", unsafe_allow_html=True)
 
     ba, bb = st.columns([1, 1.5])
 
     with ba:
         st.markdown("<div style='background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;'>", unsafe_allow_html=True)
-        st.markdown("<div style='font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#007bff;font-family:DM Mono,monospace;margin-bottom:1rem;'>Set Budget</div>", unsafe_allow_html=True)
+        st.markdown("<div style='font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#7c6af7;font-family:DM Mono,monospace;margin-bottom:1rem;'>Set Budget</div>", unsafe_allow_html=True)
 
         b_cat = st.selectbox("Category", CATEGORIES, key="budget_cat")
         b_amt = st.number_input("Monthly Limit", min_value=1.0, value=500.0, step=10.0, format="%.2f")
@@ -762,8 +762,8 @@ elif page == "Budgets":
 # PAGE: CURRENCY
 # ══════════════════════════════════════════════════════════════════════════════
 elif page == "Currency":
-    st.markdown("<h1 style='font-size:2rem;font-weight:800;letter-spacing:-0.03em;'><i class='ti ti-currency-dollar' style='margin-right:0.5rem;'></i>Currency Converter</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#6c757d;font-size:0.85rem;font-family:DM Mono,monospace;margin-bottom:1.5rem;'>Live exchange rates</p>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size:2rem;font-weight:800;letter-spacing:-0.03em;'>Currency Converter</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#6b6b80;font-size:0.85rem;font-family:DM Mono,monospace;margin-bottom:1.5rem;'>Live exchange rates</p>", unsafe_allow_html=True)
 
     @st.cache_data(ttl=3600)
     def get_rates(base="USD"):
@@ -811,10 +811,10 @@ elif page == "Currency":
 # PAGE: SETTINGS
 # ══════════════════════════════════════════════════════════════════════════════
 elif page == "Settings":
-    st.markdown("<h1 style='font-size:2rem;font-weight:800;letter-spacing:-0.03em;'><i class='ti ti-settings' style='margin-right:0.5rem;'></i>Settings</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size:2rem;font-weight:800;letter-spacing:-0.03em;'>Settings</h1>", unsafe_allow_html=True)
 
     st.markdown("### Base Currency")
-    st.markdown("<p style='color:#6c757d;font-size:0.82rem;margin-bottom:0.8rem;'>Set the default currency used across the app.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#6b6b80;font-size:0.82rem;margin-bottom:0.8rem;'>Set the default currency used across the app.</p>", unsafe_allow_html=True)
     cur_idx = CURRENCIES.index(st.session_state.base_currency) if st.session_state.base_currency in CURRENCIES else 0
     new_base = st.selectbox("Default Currency", CURRENCIES, index=cur_idx, key="base_cur_setting")
     if st.button("Save Base Currency"):
